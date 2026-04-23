@@ -1,0 +1,33 @@
+[package]
+name = "sealenv"
+version = "0.1.0"
+edition = "2021"
+description = "Encrypt .env files and switch profiles. One binary, zero setup."
+license = "MIT"
+repository = "https://github.com/sozenka/sealenv"
+homepage = "https://github.com/sozenka/sealenv"
+documentation = "https://github.com/sozenka/sealenv#readme"
+keywords = ["env", "dotenv", "secrets", "cli", "encryption"]
+categories = ["command-line-utilities", "development-tools"]
+readme = "README.md"
+
+[[bin]]
+name = "sealenv"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+ring = "0.17"
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"
+dirs = "5"
+colored = "2"
+anyhow = "1"
+base64 = "0.22"
+rand = "0.8"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
