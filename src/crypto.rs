@@ -6,6 +6,8 @@ use ring::rand::{SecureRandom, SystemRandom};
 use std::fs;
 use std::path::PathBuf;
 
+use crate::config;
+
 const ENV_FILE: &str = ".env";
 const ENC_FILE: &str = ".env.enc";
 
@@ -16,12 +18,17 @@ fn key_path() -> Result<PathBuf> {
     let keys_dir = home.join(".sealenv").join("keys");
     fs::create_dir_all(&keys_dir)?;
 
-    // Use current directory name as project identifier
-    let cwd = std::env::current_dir()?;
-    let project_id = cwd
-        .file_name()
-        .and_then(|n| n.to_str())
-        .unwrap_or("default");
+    // Use stable project_id from .sealenv/config.toml when available.
+    let project_id = if let Some(id) = config::get_project_id() {
+        id
+    } else {
+        // Legacy fallback for repos initialized before project_id existed.
+        let cwd = std::env::current_dir()?;
+        cwd.file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or("default")
+            .to_string()
+    };
 
     Ok(keys_dir.join(format!("{}.key", project_id)))
 }
@@ -107,8 +114,6 @@ pub fn encrypt_env() -> Result<()> {
     let mut sealing_key = SealingKey::new(unbound, OneNonce(Some(nonce)));
 
     let mut in_out = plaintext;
-    // Extend with tag space
-    in_out.extend(std::iter::repeat(0u8).take(AES_256_GCM.tag_len()));
 
     sealing_key
         .seal_in_place_append_tag(aead::Aad::empty(), &mut in_out)
