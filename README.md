@@ -21,8 +21,9 @@ Everyone leaks secrets eventually. `.env` files get committed. `.env.example` ge
 
 ## Install
 
-**Homebrew** *(coming soon)*
+**Homebrew**
 ```sh
+brew tap sozenka/sealenv
 brew install sealenv
 ```
 
