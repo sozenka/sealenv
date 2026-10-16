@@ -8,8 +8,7 @@
 
 ---
 
-<!-- INSERT DEMO GIF HERE -->
-<!-- Record with: vhs demo.tape -->
+![sealenv demo](demo.gif)
 
 ---
 
@@ -18,6 +17,24 @@
 Everyone leaks secrets eventually. `.env` files get committed. `.env.example` gets out of sync. Switching between dev/staging/prod means manually copying files. There's no standard, no tooling, and every team does it differently.
 
 `sealenv` fixes this in one binary.
+
+## Why sealenv?
+
+There are good tools in this space. sealenv is for when you want something small, local and boring:
+
+| | sealenv | dotenvx | SOPS | 1Password CLI (`op run`) | git-crypt |
+|---|---|---|---|---|---|
+| Single binary, no account | ✅ | ✅ | ✅ | ❌ needs 1Password | ✅ |
+| Works fully offline | ✅ | ✅ | ✅ with age/PGP | ❌ | ✅ |
+| Run a command without writing `.env` to disk | ✅ `sealenv run` | ✅ | ✅ `sops exec-env` | ✅ | ❌ |
+| Named profiles (dev / staging / prod) + diff | ✅ | env files per environment | per-file | per vault | ❌ |
+| Key setup | one command, symmetric key | keypair per env | age / PGP / cloud KMS | your 1Password account | GPG |
+
+**Pick sealenv** if you want `.env` safety for a small team or side project in under a minute.
+**Pick SOPS** if you need cloud KMS, per-value encryption in YAML/JSON, or fine-grained key management.
+**Pick 1Password CLI** if your team already lives in 1Password.
+
+---
 
 ## Install
 

@@ -110,8 +110,8 @@ fn test_decrypt_fails_with_wrong_key_home() {
 
     // Overwrite the key with different bytes to simulate wrong-key decrypt attempts.
     let project_id = read_project_id(&project_dir);
-    let key_path = dirs::home_dir()
-        .expect("home directory not found")
+    // The binary resolved its key under the HOME we passed in, not the test runner's home.
+    let key_path = home_a
         .join(".sealenv")
         .join("keys")
         .join(format!("{}.key", project_id));
